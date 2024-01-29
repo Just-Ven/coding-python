@@ -1,23 +1,19 @@
-# Example 1
-thislist = ["apple", "banana", "cherry"]
-print(thislist)
+# Examples 1
+thistuple = ("apple", "banana", "cherry")
+print(thistuple)
 
-# Example 2
-thislist = ["apple", "banana", "cherry", "apple", "cherry"]
-print(thislist)
+# Examples 2
+thistuple = ("apple", "banana", "cherry", "apple", "cherry")
+print(thistuple) # in typles allowed duplicates
 
-# Example 3
-thislist = ["apple", "banana", "cherry"]
-print(len(thislist))
+# Examples 3
+thistuple = ("apple", "banana", "cherry")
+print(len(thistuple))
 
 # Example 4
-list1 = ["apple", "banana", "cherry"]
-list2 = [1, 5, 7, 9, 3]
-list3 = [True, False, False]
+thistuple = ("apple",)
+print(type(thistuple))
 
-# Example 5
-list1 = ["abc", 34, True, 40, "male"]
-
-# Example 6
-mylist = ["apple", "banana", "cherry"]
-print(type(mylist)) # class 'list'
+#NOT a tuple
+thistuple = ("apple")
+print(type(thistuple))
