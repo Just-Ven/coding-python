@@ -297,22 +297,22 @@ fruits[0] = "kiwi"
 fruits = ["apple", "banana", "cherry"]
 fruits.append("orange")
 
-# Example 4
+# Exercise 4
 fruits = ["apple", "banana", "cherry"]
 fruits.insert(1, "lemon")
 
-# Example 5
+# Exercise 5
 fruits = ["apple", "banana", "cherry"]
 fruits.remove("banana")
 
-# Example 6
+# Exercise 6
 fruits = ["apple", "banana", "cherry"]
 print(fruits[-1])
 
-# Example 7
+# Exercise 7
 fruits = ["apple", "banana", "cherry", "orange", "kiwi", "melon", "mango"]
 print(fruits[2:5])
 
-# Example 8
+# Exercise 8
 fruits = ["apple", "banana", "cherry"]
 print(len(fruits))
