@@ -91,8 +91,8 @@ def getCoolMovies():
     result = []
     for movie in movies:
         if isMovieCool(movie.get('name')):
-            result.append(movie)
-    return result
+            result.append(movie.get('name'))
+    print(result)
 
 # exercise 3
 def returnSameCategory(category):
@@ -115,3 +115,7 @@ def calcAverageScore():
 def sameCategoryAverageScore(category):
     listSameCategory = returnSameCategory(category)
     return calcAverageScore(listSameCategory)
+
+print(isMovieCool('We Two'))
+#print(getCoolMovies)
+getCoolMovies()
