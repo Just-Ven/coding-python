@@ -1,5 +1,17 @@
 # Exercise 1
-class squaresOfNumbers:
+def printSquares(n):
+    for x in range(n + 1):
+        if x ** 2 < n:
+            yield x ** 2
+        else:
+            break
+
+myNums = printSquares(5)
+for x in myNums:
+    print(x)
+
+
+""" class squaresOfNumbers:
     def __init__(self, n):
         self.stop = n
         self.num = 1
@@ -18,4 +30,4 @@ myNum = squaresOfNumbers(100)
 myiter = iter(myNum)
 
 for x in myiter:
-    print(x)
+    print(x) """

@@ -1,4 +1,12 @@
-class decreaseToOne:
+def decrease(n):
+    for x in range(n, -1, -1):
+        yield x
+
+myNums = decrease(100)
+for x in myNums:
+    print(x)
+
+""" class decreaseToOne:
     def __init__(self, n):
         self.start = n
 
@@ -17,4 +25,4 @@ myClass = decreaseToOne(10)
 myiter = iter(myClass)
 
 for x in myiter:
-    print(x)
+    print(x) """
