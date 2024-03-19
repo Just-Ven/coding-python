@@ -1,4 +1,4 @@
-# Для запуска кода необходимо перейти в терминале в папку data
+# Не забыть что для запуска кода необходимо перейти в терминале в папку data
 import json
 with open("sample_data.json", "r") as my_file:
     json_string = my_file.read()

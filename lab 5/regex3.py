@@ -2,7 +2,7 @@
 import re
 
 def find_sequence(string):
-    pattern = r'\b[a-z]+_[a-z]+\b'
+    pattern = r'^[a-z]+_[a-z]+'
     sequences = re.search(pattern, string)
     return sequences if sequences else []
 

@@ -1,5 +1,5 @@
 import re
-
+# нужно заменить
 def replace(s):
     pattern = r'[ ,.]'
     replaced_s = re.sub(pattern, ':', s)
