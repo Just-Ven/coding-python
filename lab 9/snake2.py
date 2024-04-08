@@ -1,139 +1,222 @@
-import pygame
-import random
+
+import pygame, random, time
+
+GREEN = (0, 255, 0)
+BLACK = (0, 0, 0)
+RED = (255, 0, 0)
+GREY = (69, 69, 69)
+YELLOW = (250, 253, 15)
+BLUE = (50, 153, 213)
+WHITE = (255, 255, 255)
+
 
 pygame.init()
 
-WHITE = (255, 255, 255)
-BLACK = (0, 0, 0)
-RED = (213, 50, 80)
-GREEN = (0, 255, 0)
-BLUE = (50, 153, 213)
+WIDTH, HEIGHT = 500, 500 # Размеры экрана
 
-dis_width = 800
-dis_height = 600
-dis = pygame.display.set_mode((dis_width, dis_height))
-pygame.display.set_caption('Snake Game')
+screen = pygame.display.set_mode((WIDTH, HEIGHT)) # создание экрана
 
+class Snake:
+    def __init__(self, x, y):
+        self.size = 1
+        self.elements = [[x, y]]  
+        self.dx = 5 
+        self.dy = 0
+        self.add_size = False
+        self.add_sizeBIG=False
+        self.add_sizeTime=False
+        self.radius = 8
+        self.speed = 25
+        self.score = 0
+        self.level = 1
+        self.running = True
+        self.font= pygame.font.SysFont("comicsansms", 20)
+
+    def draw(self):
+        for element in self.elements:
+            pygame.draw.circle(screen, GREEN, element, self.radius)
+
+    def add_to_snake(self):
+        if self.add_sizeBIG == True:
+            self.size += 3
+            self.elements.append([0,0])
+            self.elements.append([0,0])
+            self.elements.append([0,0])
+            self.add_sizeBIG = False
+
+        elif self.add_sizeTime == True:
+            self.size += 5
+            self.elements.append([0,0])
+            self.elements.append([0,0])
+            self.elements.append([0,0])
+            self.elements.append([0,0])
+            self.elements.append([0,0])
+            self.add_sizeTime = False
+
+        else:
+            self.size += 1
+            self.elements.append([0, 0])
+        self.add_size = False
+
+    def message1(self):
+        text1 = self.font.render("Current level: " + str(self.level), True,BLACK)
+        return text1
+
+    def message2(self):
+        text2 = self.font.render("Current score: " + str(self.score), True,BLACK)
+        return text2
+
+    def message3(self):
+        text3 = self.font.render("Current speed: "+ str(self.speed), True, BLACK)
+        return text3
+
+    def move(self):
+        if self.add_size:
+            self.add_to_snake()
+        for i in range(self.size - 1, 0, -1):
+            self.elements[i][0] = self.elements[i - 1][0]
+            self.elements[i][1] = self.elements[i - 1][1]
+        self.elements[0][0] += self.dx
+        self.elements[0][1] += self.dy
+        if self.elements[0][0] > WIDTH: 
+            self.elements[0][0] = 0 
+        elif self.elements[0][0] < 0: 
+            self.elements[0][0] = WIDTH
+        if self.elements[0][1] > HEIGHT: 
+            self.elements[0][1] = 0
+        elif self.elements[0][1] < 0: 
+            self.elements[0][1] = HEIGHT
+
+    def collision_check(self):
+        for pos in self.elements[1:]:
+            if self.elements[0][0] == pos[0] and self.elements[0][1] == pos[1]:
+                time.sleep(1.5)
+                return True
+        return False
+
+    def eat(self, foodx1, foody1): #for regular red food
+        if foodx1 <= self.elements[0][0] <= foodx1 + 13 and foody1 <= self.elements[0][1] <= foody1 + 13:
+            self.score+=1
+            if self.score % 10 == 0:
+                self.speed += 5
+                self.level+=1
+            return True
+        return False 
+
+    def eatBIG(self,bfoodx,bfoody): #for yellow food which just as red but weights 3 points
+        if bfoodx <= self.elements[0][0] <= bfoodx + 13 and bfoody <= self.elements[0][1] <= bfoody + 13:
+            self.score+=3
+            if self.score % 10 == 0:
+                self.speed += 5
+                self.level+=1
+            return True
+        return False
+        
+    def eatTime(self,tfoodx,tfoody): #for blue food that dissapears every 5 seconds
+        if tfoodx <= self.elements[0][0] <= tfoodx + 13 and tfoody <= self.elements[0][1] <= tfoody + 13:
+            self.score+=5 #it weights 5 points
+            if self.score % 10 == 0:
+                self.speed += 5
+                self.level+=1
+            return True
+        return False
+
+class Food:
+    def __init__(self):
+        self.x, self.y  = random.randint(0, WIDTH // 10) * 10, random.randint(0, HEIGHT // 10) * 10
+
+    def gen(self):
+        self.x, self.y  = random.randint(0, WIDTH // 10) * 10, random.randint(0, HEIGHT // 10) * 10
+
+    def draw(self):
+        pygame.draw.rect(screen, RED, (self.x, self.y, 13, 13))
+        
+class BFood:
+    def __init__(self):
+        self.x, self.y  = random.randint(0, WIDTH // 10) * 10, random.randint(0, HEIGHT // 10) * 10
+
+    def gen(self):
+        self.x, self.y  = random.randint(0, WIDTH // 10) * 10, random.randint(0, HEIGHT // 10) * 10
+
+    def draw(self):
+        pygame.draw.rect(screen, YELLOW, (self.x, self.y, 13, 13))
+
+class TFood:
+    def __init__(self):
+        self.x, self.y  = random.randint(0, WIDTH // 10) * 10, random.randint(0, HEIGHT // 10) * 10
+
+    def gen(self):
+        self.x, self.y  = random.randint(0, WIDTH // 10) * 10, random.randint(0, HEIGHT // 10) * 10
+
+    def draw(self):
+        pygame.draw.rect(screen, WHITE, (self.x, self.y, 13, 13))
+
+snake = Snake(100, 100) #100,100 is the initial position
+food1 = Food()
+bfood = BFood()
+tfood = TFood()
+
+FPS = 60
+d = 5
 clock = pygame.time.Clock()
-snake_block = 10
-snake_speed = 15
-font_style = pygame.font.SysFont("bahnschrift", 25)
-score_font = pygame.font.SysFont("comicsansms", 35)
+clock.tick(FPS)
+running=True
 
-def generate_food():
-    foods = []
-    for _ in range(3):  # Generate 3 red foods
-        x = round(random.randrange(0, dis_width - snake_block) / 10.0) * 10.0
-        y = round(random.randrange(0, dis_height - snake_block) / 10.0) * 10.0
-        foods.append({"x": x, "y": y, "color": RED, "points": 1, "duration": 150})
-    # Generate 1 blue food
-    x = round(random.randrange(0, dis_width - snake_block) / 10.0) * 10.0
-    y = round(random.randrange(0, dis_height - snake_block) / 10.0) * 10.0
-    foods.append({"x": x, "y": y, "color": BLUE, "points": 3, "duration": 150})
-    return foods
+#coбытие tfood_event повторяется каждые 5000 миллисекунд или 5 секунд
+tfood_event = pygame.USEREVENT + 1 
+pygame.time.set_timer(tfood_event, 5000)
 
-def regenerate_food():
-    global foods
-    foods = generate_food()
+while not snake.collision_check() and running:
+    clock.tick(snake.speed)
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_ESCAPE:
+                running = False
+            if (event.key == pygame.K_RIGHT or event.key == pygame.K_d) and snake.dx != -d:
+                snake.dx = d
+                snake.dy = 0
+            if (event.key ==pygame.K_LEFT or event.key == pygame.K_a) and snake.dx != d:
+                snake.dx = -d
+                snake.dy = 0
+            if (event.key == pygame.K_UP or event.key == pygame.K_w) and snake.dy != d:
+                snake.dx = 0
+                snake.dy = -d
+            if (event.key == pygame.K_DOWN or event.key == pygame.K_s) and snake.dy != -d:
+                snake.dx = 0
+                snake.dy = d
 
-def Your_score(score, level):
-    value = score_font.render("Ur score: " + str(score) + " and Ur level: " + str(level), True, WHITE)
-    dis.blit(value, [0, 0])
+        if event.type == tfood_event:
+            tfood.gen() # каждые 5 секунд создается новая позиция для синей еды
 
-def our_snake(snake_block, snake_list):
-    for x in snake_list:
-        pygame.draw.rect(dis, GREEN, [x[0], x[1], snake_block, snake_block])
+    if snake.eat(food1.x, food1.y):
+        snake.add_size = True
+        food1.gen()
 
-def message(msg, color):
-    mesg = font_style.render(msg, True, color)
-    dis.blit(mesg, [dis_width / 6, dis_height / 3])
+    if snake.eatBIG(bfood.x, bfood.y): 
+        snake.add_size = True
+        snake.add_sizeBIG = True #this additional boolean values are for identifying how many circles we need to add to our snake for this particular food
+        bfood.gen()
 
-def gameLoop():
-    global snake_speed, foods
-    game_over = False
-    game_close = False
-    x1 = dis_width / 2
-    y1 = dis_height / 2
-    x1_change = 0
-    y1_change = 0
-    snake_List = []
-    Length_of_snake = 1
-    level = 0  # Set initial level
-    foods = generate_food()
+    if snake.eatTime(tfood.x, tfood.y):
+        snake.add_size = True
+        snake.add_sizeTime = True
+        tfood.gen()
 
-    while not game_over:
-        while game_close == True:
-            dis.fill(BLACK)
-            message("You lose! Press Q for exit or press C to play again!", RED)
-            Your_score(Length_of_snake - 1, level)
-            pygame.display.update()
-            for event in pygame.event.get():
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_q:
-                        game_over = True
-                        game_close = False
-                    if event.key == pygame.K_c:
-                        gameLoop()
+    snake.move()
 
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                game_over = True
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_LEFT or event.key == pygame.K_a:
-                    x1_change = -snake_block
-                    y1_change = 0
-                elif event.key == pygame.K_RIGHT or event.key == pygame.K_d:
-                    x1_change = snake_block
-                    y1_change = 0
-                elif event.key == pygame.K_UP or event.key == pygame.K_w:
-                    y1_change = -snake_block
-                    x1_change = 0
-                elif event.key == pygame.K_DOWN or event.key == pygame.K_s:
-                    y1_change = snake_block
-                    x1_change = 0
+    screen.fill(BLUE)
 
-        if x1 >= dis_width or x1 < 0 or y1 >= dis_height or y1 < 0:
-            game_close = True
-        x1 += x1_change
-        y1 += y1_change
-        dis.fill(BLACK)
+    screen.blit(snake.message1(), (10, 10))
+    screen.blit(snake.message2(), (10, 30))
+    screen.blit(snake.message3(), (10, 50))
 
-        for food in foods:
-            if food['duration'] > 0:
-                pygame.draw.rect(dis, food['color'], [food['x'], food['y'], snake_block, snake_block])
-                food['duration'] -= 1
-            else:
-                foods.remove(food)
+    snake.draw()
+    food1.draw()
+    bfood.draw()
+    tfood.draw()
 
-        if not foods:
-            regenerate_food()
-
-        for food in foods:
-            if x1 == food['x'] and y1 == food['y']:
-                Length_of_snake += food['points']
-                foods.remove(food)
-            if (Length_of_snake - 1) % 10 == 0 and Length_of_snake - 1 != 0:
-                level += 1
-
-        snake_Head = []
-        snake_Head.append(x1)
-        snake_Head.append(y1)
-        snake_List.append(snake_Head)
-
-        if len(snake_List) > Length_of_snake:
-            del snake_List[0]
-
-        for x in snake_List[:-1]:
-            if x == snake_Head:
-                game_close = True
-
-        our_snake(snake_block, snake_List)
-        Your_score(Length_of_snake - 1, level)
-        pygame.display.update()
-
-        clock.tick(snake_speed)
-
-    pygame.quit()
-    quit()
-
-gameLoop()
+    pygame.display.flip()
+    
+pygame.quit()
